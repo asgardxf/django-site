@@ -17,6 +17,33 @@ class TradePoint(models.Model):
 	def __str__(self):
 		return self.name
 
+	def filteredGameSetCount(self, **kvargs):
+		return self.game_set.filter(**kvargs).count()
+
+	def status(self):
+		return self.filteredGameSetCount(start_time__range = [
+			datetime.datetime.now() - datetime.timedelta(minutes=30), datetime.datetime.now()
+			]) > 0
+	def game_count(self):
+		return self.filteredGameSetCount(start_time__range = [
+				datetime.date.today(), datetime.datetime.now()
+			])
+
+	def interruptions(self):
+		interruptCount = self.filteredGameSetCount(start_time__range = [
+				datetime.date.today(), datetime.datetime.now()
+			], interrupt=True)
+		if interruptCount == 0:
+			return  "Нет"
+		return interruptCount
+
+	status.short_description = 'Работает'
+	status.boolean = True
+
+	game_count.short_description = 'Количество игр'
+
+	interruptions.short_description = 'Прерывание'
+
 
 class Operator(models.Model):
 	class Meta:
