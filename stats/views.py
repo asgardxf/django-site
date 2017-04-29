@@ -31,7 +31,7 @@ def getDataFromUrl(req):
 		result[val] = get(key, '')
 
 	#return result
-	result['trade_point'] = TradePoint.objects.get(id=get('TT', ''))
+	result['trade_point'] = TradePoint.objects.get(label=get('TT', ''))
 
 	dateFormat = '%Y-%m-%dT%H:%M:%S'
 	result['start_time'] = datetime.strptime(

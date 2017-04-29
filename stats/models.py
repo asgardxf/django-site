@@ -12,6 +12,7 @@ class TradePoint(models.Model):
 	open_time = models.TimeField("Время открытия",default=datetime.time(9,0,0))
 	close_time = models.TimeField("Время закрытия",default=datetime.time(22,0,0))
 	target_count = models.IntegerField('Количество мишеней', default=1)
+	label = models.IntegerField('ID', default=1)
 
 	def __str__(self):
 		return self.name
