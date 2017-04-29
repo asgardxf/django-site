@@ -25,7 +25,7 @@ class GameInline(admin.TabularInline):
 
 
 class TradePointAdmin(admin.ModelAdmin):
-	list_display = ('label', 'name', 'address', 'status', 'game_count')
+	list_display = ('label', 'name', 'address', 'status', 'game_count', 'interruptions')
 	inlines = [OperatorInline, GameInline]
 
 
