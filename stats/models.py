@@ -13,6 +13,8 @@ class TradePoint(models.Model):
 	close_time = models.TimeField("Время закрытия",default=datetime.time(22,0,0))
 	target_count = models.IntegerField('Количество мишеней', default=1)
 	label = models.IntegerField('ID', default=1)
+	capacity = models.FloatField('Вместимость', default=0)
+	remaining_amount = models.FloatField('Оставшееся количество', default=0)
 
 	def __str__(self):
 		return self.name
@@ -37,12 +39,24 @@ class TradePoint(models.Model):
 			return  "Нет"
 		return interruptCount
 
+	def bulletsLeft(self):
+		if self.capacity == 0:
+			return 'Не определено'
+		percentage = self.remaining_amount * 100 / self.capacity
+		if percentage > 100:
+			return '100%'
+		if percentage < 1:
+			return '0%'
+		return "{0:.1f}%".format(percentage)
+
 	status.short_description = 'Работает'
 	status.boolean = True
 
 	game_count.short_description = 'Количество игр'
 
 	interruptions.short_description = 'Прерывание'
+
+	bulletsLeft.short_description = 'Остаток'
 
 
 class Operator(models.Model):
@@ -71,7 +85,7 @@ class Target(models.Model):
 class Game(models.Model):
 	class Meta:
 		verbose_name = "Игра"
-		verbose_name_plural = "Игры"
+		verbose_name_plural = "Статистика"
 	trade_point = models.ForeignKey(TradePoint, on_delete=models.CASCADE)
 	target = models.IntegerField("Мишень")
 	start_time = models.DateTimeField('Время начала')

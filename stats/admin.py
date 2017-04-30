@@ -14,6 +14,9 @@ class GameInline(admin.TabularInline):
 	extra = 0
 	readonly_fields = ('start_time','duration', 'shotCount', 'target')
 	fields = ('start_time','duration', 'shotCount', 'target')
+
+	verbose_name = 'Игра'
+	verbose_name_plural = 'Игры'
 	def shotCount(self, instance):
 		if instance.idle_count is None:
 			return 0
@@ -25,8 +28,21 @@ class GameInline(admin.TabularInline):
 
 
 class TradePointAdmin(admin.ModelAdmin):
-	list_display = ('label', 'name', 'address', 'status', 'game_count', 'interruptions')
+	list_display = ('label', 'name', 'address', 'status', 'game_count', 'interruptions', 'bulletsLeft')
 	inlines = [OperatorInline, GameInline]
 
 
+class GameAdmin(admin.ModelAdmin):
+	class Meta:
+		verbose_name = 'Статистика'
+
+
+	list_display = ('get_label', 'start_time', 'duration', 'target', 'idle_count', 'prise', 'interrupt', 'service')
+
+	def get_label(self, instance):
+		return instance.trade_point.label
+	get_label.short_description = 'ТТ'
+
+
 admin.site.register(TradePoint, TradePointAdmin)
+admin.site.register(Game, GameAdmin)
