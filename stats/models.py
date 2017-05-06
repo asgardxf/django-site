@@ -101,3 +101,9 @@ class Game(models.Model):
 		return 'Игра'
 
 
+class Error(models.Model):
+	class Meta:
+		verbose_name = 'Ошибка'
+		verbose_name_plural = 'Ошибки'
+	params = models.TextField('Параметры')
+	output = models.TextField('Сообщение')

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import TradePoint, Operator, Game
+from .models import TradePoint, Operator, Game, Error
 #admin.site.register(TradePoint)
 admin.site.register(Operator)
 from pprint import pprint as p
@@ -44,5 +44,12 @@ class GameAdmin(admin.ModelAdmin):
 	get_label.short_description = 'ТТ'
 
 
+class ErrorAdmin(admin.ModelAdmin):
+	readonly_fields = ('params', 'output')
+	class Meta:
+		verbose_name = 'Ошибки'
+
+
 admin.site.register(TradePoint, TradePointAdmin)
 admin.site.register(Game, GameAdmin)
+admin.site.register(Error, ErrorAdmin)

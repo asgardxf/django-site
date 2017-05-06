@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import datetime, timedelta
 
-from .models import Game, TradePoint
+from .models import Game, TradePoint, Error
 
 #INSERT INTO `Tir`(`Точка тира`, `Мишень`, `Дата`, `Время`, `Время игры`, `Статистика упавших`,
  #`Количество холостых`, `Приз`, `Прерывание`, `Служебные`) VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6],[value-7],[value-8],[value-9],[value-10])
@@ -44,7 +44,12 @@ def getDataFromUrl(req):
 
 
 def insert(request):
-	params = getDataFromUrl(request.GET)
-	g = Game(**params)
-	g.save()
-	return HttpResponse("success")
+	try:
+		params = getDataFromUrl(request.GET)
+		g = Game(**params)
+		g.save()
+		return HttpResponse("success")
+	except Exception as e:
+		error = Error(params=request.META['QUERY_STRING'], output=repr(e))
+		error.save()
+		return HttpResponse("error")
