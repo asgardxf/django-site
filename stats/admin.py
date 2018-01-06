@@ -5,15 +5,18 @@ admin.site.register(BulletHistory)
 admin.site.register(Operator)
 from pprint import pprint as p
 
-class DurationFilter(admin.ListFilter):
+class DurationFilter(admin.SimpleListFilter):
 	title = 'Продолжительность'
 	parameter_name = 'duration'
-	template = 'stats/custom_filter.html'
 
 	def lookups(self, request, model_admin):
-		#return (('80s', ('in the eighties')), ('90s', ('in the nineties')), )
 		return (
-			('foo','bar',),
+			('1m','1 минута',),
+			('3m','3 минуты',),
+			('5m','5 минут',),
+			('7m','7 минут',),
+			('10m','10 минут',),
+			('15m','15 минут',),
 		)
 
 	def queryset(self, request, queryset):
