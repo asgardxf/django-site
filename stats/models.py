@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, connection
 import datetime
 
 class TradePoint(models.Model):
@@ -13,8 +13,10 @@ class TradePoint(models.Model):
 	close_time = models.TimeField("Время закрытия",default=datetime.time(22,0,0))
 	target_count = models.IntegerField('Количество мишеней', default=1)
 	label = models.IntegerField('ID', default=1)
-	capacity = models.FloatField('Вместимость', default=0)
+	capacity = models.IntegerField('Вместимость', default=0)
 	remaining_amount = models.FloatField('Оставшееся количество', default=0)
+	big_toys_count = models.IntegerField('Большие игрушки', default=0)
+	small_toys_count = models.IntegerField('Маленькие игрушки', default=0	)
 
 	def __str__(self):
 		return self.name
@@ -34,20 +36,27 @@ class TradePoint(models.Model):
 	def interruptions(self):
 		interruptCount = self.filteredGameSetCount(start_time__range = [
 				datetime.date.today(), datetime.datetime.now()
-			], interrupt=True)
+			], interrupt=False)
 		if interruptCount == 0:
 			return  "Нет"
 		return interruptCount
 
-	def bulletsLeft(self):
-		if self.capacity == 0:
-			return 'Не определено'
-		percentage = self.remaining_amount * 100 / self.capacity
-		if percentage > 100:
-			return '100%'
-		if percentage < 1:
-			return '0%'
-		return "{0:.1f}%".format(percentage)
+	def bulletsCount(self):
+		with connection.cursor() as cursor:
+			cursor.execute("select sum(bullet_count) from stats_bullethistory bh where bh.trade_point_id = %s", [self.id])
+			result = cursor.fetchone()
+		return result[0]
+
+	# def bulletsLeft(self):
+	# 	return 'nan'
+	# 	if self.capacity == 0:
+	# 		return 'Не определено'
+	# 	percentage = self.remaining_amount * 100 / self.capacity
+	# 	if percentage > 100:
+	# 		return '100%'
+	# 	if percentage < 1:
+	# 		return '0%'
+	# 	return "{0:.1f}%".format(percentage)
 
 	status.short_description = 'Работает'
 	status.boolean = True
@@ -56,7 +65,17 @@ class TradePoint(models.Model):
 
 	interruptions.short_description = 'Прерывание'
 
-	bulletsLeft.short_description = 'Остаток'
+	bulletsCount.short_description = 'Пули'
+
+
+class BulletHistory(models.Model):
+	class Meta:
+		indexes = [
+			models.Index(fields=['trade_point'], name='bullet_history_tp_idx')
+		]
+	trade_point = models.ForeignKey(TradePoint, on_delete=models.CASCADE)
+	bullet_count = models.IntegerField('Приход пуль', default=1)
+	date = models.DateTimeField('Время прихода', default=datetime.datetime.now)
 
 
 class Operator(models.Model):
@@ -90,7 +109,7 @@ class Game(models.Model):
 	target = models.IntegerField("Мишень")
 	start_time = models.DateTimeField('Время начала')
 	duration = models.DurationField('Продолжительность игры', default=datetime.timedelta(0))
-	fallen_count = models.IntegerField("Упавшие")
+	fallen_count = models.CharField("Упавшие", max_length=200)
 	idle_count = models.IntegerField("Холостые")
 	prise = models.BooleanField("Приз")
 	interrupt = models.BooleanField("Прерывание")
