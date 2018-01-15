@@ -5,7 +5,7 @@ class TradePoint(models.Model):
 	class Meta:
 		verbose_name = 'Торговая точка'
 		verbose_name_plural = 'Тороговые точки'
-	name = models.CharField("Имя",max_length=200)
+	name = models.CharField("Торговая точка",max_length=200)
 	region = models.CharField("Регион",max_length=200)
 	city = models.CharField("Город",max_length=200)
 	address = models.CharField("Адрес",max_length=600)
@@ -73,6 +73,8 @@ class BulletHistory(models.Model):
 		indexes = [
 			models.Index(fields=['trade_point'], name='bullet_history_tp_idx')
 		]
+		verbose_name = 'Приход пуль'
+		verbose_name_plural = 'Приходы пуль'
 	trade_point = models.ForeignKey(TradePoint, on_delete=models.CASCADE)
 	bullet_count = models.IntegerField('Приход пуль', default=1)
 	date = models.DateTimeField('Время прихода', default=datetime.datetime.now)
