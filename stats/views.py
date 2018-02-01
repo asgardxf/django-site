@@ -68,4 +68,4 @@ def insert(request):
 
 
 def showTradePointStats(request,id):
-	return HttpResponse(id);
+	return render(request, 'stats/tradepoint_select_params.html', {'id':id})
