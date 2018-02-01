@@ -65,8 +65,12 @@ class OperatorAdmin(admin.ModelAdmin):
 	list_display = ('name', 'trade_point', 'start_time', 'end_time', 'phone')
 
 class TradePointAdmin(admin.ModelAdmin):
-	list_display = ('label', 'name', 'address', 'status', 'game_count', 'interruptions', 'bulletsCount', 'big_toys_count', 'small_toys_count')
+	list_display = ('label', 'name', 'address', 'status', 'game_count', 'interruptions', 'bulletsCount', 'big_toys_count', 'small_toys_count', 'stats')
 	inlines = [OperatorInline, GameInline]
+
+	def stats(self, instance):
+		return format_html('<a href="/showStats/trade_point/{}">Статистика</a>', instance.id)
+	stats.short_description = 'Статистика'
 
 def idle_render(obj):
 	i = obj.idle_count

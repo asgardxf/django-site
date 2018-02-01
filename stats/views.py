@@ -65,3 +65,7 @@ def insert(request):
 		error = Error(params=request.META['QUERY_STRING'], output=repr(e))
 		error.save()
 		return HttpResponse("error")
+
+
+def showTradePointStats(request,id):
+	return HttpResponse(id);
