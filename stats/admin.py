@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
 from .models import TradePoint, Operator, Game, Error, BulletHistory
 admin.site.register(BulletHistory)
@@ -73,10 +74,9 @@ def idle_render(obj):
 		0: 'blue', 1: 'green', 2: 'yellow',
 	}
 	color = colors.get(i, 'red')
-	return '<span style="color: {};">{}</span>'.format(color, i)
+	return format_html('<span style="color: {};">{}</span>', color, i)
 
 idle_render.short_description = 'Холостые'
-idle_render.allow_tags = True
 
 class GameAdmin(admin.ModelAdmin):
 	class Meta:
