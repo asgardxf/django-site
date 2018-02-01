@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from datetime import datetime, timedelta
+
 
 from .models import Game, TradePoint, Error, BulletHistory
 
@@ -69,3 +70,39 @@ def insert(request):
 
 def showTradePointStats(request,id):
 	return render(request, 'stats/tradepoint_select_params.html', {'id':id})
+
+def getFilterDate(period):
+	relation = {
+		'month': 30, 'week': 7, 'day': 1
+	}
+	daysCount = relation[period]
+	return datetime.today() - timedelta(days=daysCount)
+
+def getPlot(data):
+	import matplotlib as mpl
+	mpl.use('Agg')
+	import matplotlib.pyplot as pl
+	from collections import Counter
+	import io
+	c = Counter(data)
+	fig = pl.figure()
+	ax = fig.add_subplot(111)
+	ax.bar(c.keys(), c.values(), width=.1)
+	#ax.bar(['foo','bar'], [1,5], width=.1)
+	#ax.xaxis_date()
+	buf = io.BytesIO()
+	fig.autofmt_xdate()
+	fig.savefig(buf, format='png')
+	buf.seek(0)
+	v = buf.getvalue()
+	buf.close()
+	return v
+
+
+
+def tradePointStats(request, id):
+	period = getFilterDate( request.GET.get('period') )
+	objects = Game.objects.filter(trade_point=id, start_time__gte=period)
+	result = tuple(g.start_time.strftime("%d %h %H:%M") for g in objects)
+	file = getPlot(result)
+	return HttpResponse(file, content_type='image/png')

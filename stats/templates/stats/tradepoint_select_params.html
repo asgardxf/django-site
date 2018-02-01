@@ -1,7 +1,13 @@
-<form action="result/{{id}}"><div>период: <select name="period">
-	<option>День</option>
-	<option>Неделя</option>
-	<option>Месяц</option>
+<form action="result/{{id}}">
+<div>период: <select name="period">
+	<option value="day">День</option>
+	<option value="week">Неделя</option>
+	<option value="month">Месяц</option>
+</select></div>
+<div>Тип <select name="type">
+	<option value="game">Игры</option>
+	<option value="prise">Призы</option>
+	<option value="bullet">Пули</option>
 </select></div>
 <p><input type="submit"></p>
 <form>
