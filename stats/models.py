@@ -77,7 +77,7 @@ class BulletHistory(models.Model):
 		verbose_name_plural = 'Приходы пуль'
 	trade_point = models.ForeignKey(TradePoint, on_delete=models.CASCADE)
 	bullet_count = models.IntegerField('Приход пуль', default=1)
-	date = models.DateTimeField('Время прихода', default=datetime.datetime.now)
+	start_time = models.DateTimeField('Время прихода', default=datetime.datetime.now)
 
 
 class Operator(models.Model):

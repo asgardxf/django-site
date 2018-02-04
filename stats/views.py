@@ -78,13 +78,19 @@ def getFilterDate(period):
 	daysCount = relation[period]
 	return datetime.today() - timedelta(days=daysCount)
 
-def getPlot(data):
+def getModel(_type):
+	relation = {
+		'game': Game, 'bullet': BulletHistory,'prise': Game
+	}
+	return relation[_type]
+
+def plotGame(data):
 	import matplotlib as mpl
 	mpl.use('Agg')
 	import matplotlib.pyplot as pl
 	from collections import Counter
 	import io
-	c = Counter(data)
+	c = Counter(x[0] for x in data)
 	fig = pl.figure()
 	ax = fig.add_subplot(111)
 	ax.bar(c.keys(), c.values(), width=.1)
@@ -98,11 +104,44 @@ def getPlot(data):
 	buf.close()
 	return v
 
+def plotBullets(data):
+	import matplotlib as mpl
+	mpl.use('Agg')
+	import matplotlib.pyplot as pl
+	from collections import Counter
+	import io
+	d = dict()
+	for (date, instance) in data:
+		if date not in d:
+			d[date] = 0
+		d[date] += -(instance.bullet_count)
+
+	fig = pl.figure()
+	ax = fig.add_subplot(111)
+	ax.bar(d.keys(), d.values(), width=.1)
+
+	buf = io.BytesIO()
+	fig.autofmt_xdate()
+	fig.savefig(buf, format='png')
+	buf.seek(0)
+	v = buf.getvalue()
+	buf.close()
+	print(data)
+	return v
+
+plots = {'game': plotGame, 'bullet': plotBullets, 'prise': plotGame}
+
+
+
 
 
 def tradePointStats(request, id):
 	period = getFilterDate( request.GET.get('period') )
-	objects = Game.objects.filter(trade_point=id, start_time__gte=period)
-	result = tuple(g.start_time.strftime("%d %h %H:%M") for g in objects)
-	file = getPlot(result)
+	params = {'trade_point': id, 'start_time__gte': period}
+	_type = request.GET.get('type')
+	if _type == 'prise':
+		params['prise'] = True
+	objects = getModel(_type).objects.filter(**params)
+	result = tuple((g.start_time.strftime("%d %h %H:%M"), g) for g in objects)
+	file = plots[_type](result)
 	return HttpResponse(file, content_type='image/png')
