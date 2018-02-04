@@ -69,7 +69,7 @@ class TradePointAdmin(admin.ModelAdmin):
 	inlines = [OperatorInline, GameInline]
 
 	def stats(self, instance):
-		return format_html('<a href="/showStats/trade_point/{}">Статистика</a>', instance.id)
+		return format_html('<a href="/showStats/trade_point/{}" target="_blank">Статистика</a>', instance.id)
 	stats.short_description = 'Статистика'
 
 def idle_render(obj):
