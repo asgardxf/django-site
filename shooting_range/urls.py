@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.urls import path, include
 from django.contrib import admin
-from stats.views import insert, showTradePointStats, tradePointStats
+from stats.views.main import insert
+from stats.views.stats import showTradePointStats, tradePointStats
 
 statsPatterns = [
- 	path('trade_point/<int:id>', showTradePointStats),
- 	path('trade_point/result/<int:id>', tradePointStats)
+    path('trade_point/<int:id>', showTradePointStats),
+    path('trade_point/result/<int:id>', tradePointStats)
 ]
 
 urlpatterns = [
