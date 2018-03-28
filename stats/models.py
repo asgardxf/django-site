@@ -4,8 +4,8 @@ import datetime
 
 class TradePoint(models.Model):
     class Meta:
-        verbose_name = 'Торговая точка'
-        verbose_name_plural = 'Тороговые точки'
+        verbose_name = 'Торговую точку' #в родительном падеже
+        verbose_name_plural = 'Торговые точки'
 
     name = models.CharField("Торговая точка", max_length=200)
     region = models.CharField("Регион", max_length=200)
@@ -14,8 +14,8 @@ class TradePoint(models.Model):
     open_time = models.TimeField("Время открытия", default=datetime.time(9, 0, 0))
     close_time = models.TimeField("Время закрытия", default=datetime.time(22, 0, 0))
     target_count = models.IntegerField('Количество мишеней', default=1)
-    label = models.IntegerField('ID', default=1)
-    capacity = models.IntegerField('Вместимость', default=0)
+    label = models.IntegerField('ID', default=1, unique=True)
+    capacity = models.IntegerField('Вместимость пуль', default=0)
     remaining_amount = models.FloatField('Оставшееся количество', default=0)
     big_toys_count = models.IntegerField('Большие игрушки', default=0)
     small_toys_count = models.IntegerField('Маленькие игрушки', default=0)
@@ -91,7 +91,6 @@ class Operator(models.Model):
         verbose_name_plural = 'Операторы'
 
     name = models.CharField(max_length=200)
-    trade_point = models.ForeignKey(TradePoint, on_delete=models.CASCADE)
     start_time = models.TimeField("Начало работы", default=datetime.time(9, 0, 0))
     end_time = models.TimeField("Конец работы", default=datetime.time(22, 0, 0))
     phone = models.CharField("Телефон", max_length=200)

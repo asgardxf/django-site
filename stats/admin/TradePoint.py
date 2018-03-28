@@ -31,7 +31,7 @@ class TradePointAdmin(admin.ModelAdmin):
     list_display = (
     'label', 'name', 'address', 'status', 'game_count', 'interruptions', 'bulletsCount', 'big_toys_count',
     'small_toys_count', 'stats')
-    inlines = [OperatorInline, GameInline]
+    inlines = [GameInline]
 
     def stats(self, instance):
         return format_html('<a href="/showStats/trade_point/{}" target="_blank">Статистика</a>', instance.id)

@@ -5,7 +5,7 @@ from ..models import TradePoint, Operator, Game, Error, BulletHistory
 
 @admin.register(Operator)
 class OperatorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'trade_point', 'start_time', 'end_time', 'phone')
+    list_display = ('name', 'start_time', 'end_time', 'phone')
 
 
 @admin.register(Error)
