@@ -27,14 +27,26 @@ def plotGame(data):
     import matplotlib as mpl
     mpl.use('Agg')
     import matplotlib.pyplot as pl
+    import matplotlib.ticker as plticker
     from collections import Counter
     import io
     c = Counter(x[0] for x in data)
     fig = pl.figure()
+    fig.set_size_inches(30, 15)
     ax = fig.add_subplot(111)
     ax.bar(c.keys(), c.values(), width=.1)
     # ax.bar(['foo','bar'], [1,5], width=.1)
     # ax.xaxis_date()
+
+    ax.set_xlabel('Статистика по дням')
+    ax.set_ylabel('Игр за день')
+
+    loc = plticker.MultipleLocator(base=5)  # this locator puts ticks at regular intervals
+    l = list(c.values())
+    max_value = max(l or [1])
+    if max_value > 5:
+        ax.yaxis.set_major_locator(loc)
+
     buf = io.BytesIO()
     fig.autofmt_xdate()
     fig.savefig(buf, format='png')
@@ -48,7 +60,7 @@ def plotBullets(data):
     import matplotlib as mpl
     mpl.use('Agg')
     import matplotlib.pyplot as pl
-    from collections import Counter
+    import matplotlib.ticker as plticker
     import io
     d = dict()
     for (date, instance) in data:
@@ -57,12 +69,22 @@ def plotBullets(data):
         d[date] += -(instance.bullet_count)
 
     fig = pl.figure()
+    fig.set_size_inches(30, 15)
     ax = fig.add_subplot(111)
+    ax.set_xlabel('Статистика по дням')
+    ax.set_ylabel('Расход за день')
+
+    loc = plticker.MultipleLocator(base=5)  # this locator puts ticks at regular intervals
+    l = list(d.values())
+    max_value = max(l or [1])
+    if max_value > 5:
+        ax.yaxis.set_major_locator(loc)
+
     ax.bar(d.keys(), d.values(), width=.1)
 
     buf = io.BytesIO()
     fig.autofmt_xdate()
-    fig.savefig(buf, format='png')
+    fig.savefig(buf, format='png', dpi=200)
     buf.seek(0)
     v = buf.getvalue()
     buf.close()
