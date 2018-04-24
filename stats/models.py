@@ -77,10 +77,10 @@ class BulletHistory(models.Model):
         indexes = [
             models.Index(fields=['trade_point'], name='bullet_history_tp_idx')
         ]
-        verbose_name = 'Приход пуль'
-        verbose_name_plural = 'Приходы пуль'
+        verbose_name = 'Перемещение пуль со склада'
+        verbose_name_plural = 'Перемещение пуль со склада'
 
-    trade_point = models.ForeignKey(TradePoint, on_delete=models.CASCADE)
+    trade_point = models.ForeignKey(TradePoint, on_delete=models.CASCADE, verbose_name='Торговая точка')
     bullet_count = models.IntegerField('Приход пуль', default=1)
     start_time = models.DateTimeField('Время прихода', default=datetime.datetime.now)
 
@@ -90,7 +90,7 @@ class Operator(models.Model):
         verbose_name = 'Оператор'
         verbose_name_plural = 'Операторы'
 
-    name = models.CharField(max_length=200)
+    name = models.CharField('ФИО', max_length=200)
     start_time = models.TimeField("Начало работы", default=datetime.time(9, 0, 0))
     end_time = models.TimeField("Конец работы", default=datetime.time(22, 0, 0))
     phone = models.CharField("Телефон", max_length=200)

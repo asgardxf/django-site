@@ -31,7 +31,7 @@ class GameInline(admin.TabularInline):
 @admin.register(TradePoint)
 class TradePointAdmin(admin.ModelAdmin):
     list_display = (
-    'label', 'name', 'address', 'status', 'game_count', 'interruptions', 'bulletsCount', 'big_toys_count',
+    'label', 'name', 'region', 'city', 'address', 'status', 'game_count', 'interruptions', 'bulletsCount', 'big_toys_count',
     'small_toys_count', 'stats')
     inlines = [GameInline]
 

@@ -62,6 +62,7 @@ class GameAdmin(admin.ModelAdmin):
     # search_fields = ('duration', )
 
     def get_label(self, instance):
-        return instance.trade_point.label
+        return instance.trade_point.name
+
 
     get_label.short_description = 'ТТ'

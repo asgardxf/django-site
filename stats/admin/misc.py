@@ -16,4 +16,6 @@ class ErrorAdmin(admin.ModelAdmin):
         verbose_name = 'Ошибки'
 
 
-admin.site.register(BulletHistory)
+@admin.register(BulletHistory)
+class BulletAdmin(admin.ModelAdmin):
+    list_display = ['trade_point', 'bullet_count', 'start_time']
