@@ -40,7 +40,7 @@ def getDataFromUrl(req):
         dateFormat
     )
 
-    result['duration'] = timedelta(minutes=int(result['duration']))
+    result['duration'] = timedelta(seconds=int(result['duration']))
     return result
 
 
