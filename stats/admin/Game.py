@@ -56,7 +56,7 @@ class GameAdmin(admin.ModelAdmin):
 
     list_display = ('get_label', 'start_time', 'duration', 'target', idle_render, 'prise', 'interrupt', 'service')
     list_filter = (
-        'interrupt', 'idle_count', ('start_time', DateRangeFilter), 'trade_point__name',
+        'interrupt', 'idle_count', ('start_time', DateTimeRangeFilter), 'trade_point__name',
         DurationFilter,
     )
 
