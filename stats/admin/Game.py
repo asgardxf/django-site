@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from rangefilter.filter import DateRangeFilter, DateTimeRangeFilter
 
 from ..models import Game
 
@@ -55,7 +56,7 @@ class GameAdmin(admin.ModelAdmin):
 
     list_display = ('get_label', 'start_time', 'duration', 'target', idle_render, 'prise', 'interrupt', 'service')
     list_filter = (
-        'interrupt', 'idle_count', 'start_time', 'trade_point__name',
+        'interrupt', 'idle_count', ('start_time', DateRangeFilter), 'trade_point__name',
         DurationFilter,
     )
 
